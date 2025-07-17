@@ -1,5 +1,4 @@
-// This is a Node.js function that will run on Vercel's servers.
-
+// This is the Node.js function snippet that will run on Vercel's servers.
 export default async function handler(request, response) {
   // Only allow POST requests for security.
   if (request.method !== 'POST') {

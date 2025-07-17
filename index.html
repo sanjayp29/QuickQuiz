@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickQuiz - AI Powered Quizzes</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts (Poppins) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- App Loader -->
+    <div id="app-loader" class="app-loader-container">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#" onclick="location.reload()">QuickQuiz</a>
+            <div id="auth-links" class="d-flex align-items-center">
+                <span id="user-display-name" class="d-none"></span>
+                <button id="logout-btn-nav" class="btn btn-light d-none">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- App Content Sections -->
+
+        <!-- Login View -->
+        <section id="login-view" class="d-none">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body p-5">
+                            <h1 id="login-title" class="card-title mb-4 text-center">Welcome to QuickQuiz</h1>
+                            
+                            <!-- Email/Password Form -->
+                            <div id="email-password-form">
+                                <div class="form-floating mb-3 d-none" id="display-name-container">
+                                    <input type="text" class="form-control" id="display-name" placeholder="Your Name">
+                                    <label for="display-name">Your Name</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="email" class="form-control" id="email" placeholder="name@example.com">
+                                    <label for="email">Email address</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="password" class="form-control" id="password" placeholder="Password">
+                                    <label for="password">Password</label>
+                                </div>
+                                <p id="auth-error" class="text-danger" aria-live="polite"></p>
+                                <button id="email-signin-btn" class="btn btn-primary w-100 mb-2">Sign In</button>
+                                <button id="email-signup-btn" class="btn btn-success w-100 mb-2 d-none">Create Account</button>
+                            </div>
+
+                            <div class="d-flex align-items-center my-3">
+                                <hr class="flex-grow-1">
+                                <span class="mx-2 text-muted">OR</span>
+                                <hr class="flex-grow-1">
+                            </div>
+
+                             <button id="login-google-btn" class="btn btn-danger w-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-google me-2" viewBox="0 0 16 16">
+                                  <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.25C3.216 7.62 3 8.284 3 9s.216 1.38.508 1.946C4.14 12.592 5.913 14 8 14c1.453 0 2.746-.52 3.697-1.356l2.284 2.284A7.95 7.95 0 0 1 8 16z"/>
+                                </svg>
+                                Sign in with Google
+                            </button>
+
+                            <p class="mt-3 mb-0 text-center">
+                                <a href="#" id="toggle-auth-mode-link" class="text-primary fw-bold">Need an account? Sign Up</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard View -->
+        <section id="dashboard-view" class="d-none">
+            <h2 id="welcome-message" class="text-white text-center mb-4"></h2>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="text-white m-0">Dashboard</h3>
+                <button id="create-quiz-btn" class="btn btn-primary">Create New Quiz</button>
+            </div>
+            
+            <h4 class="mt-4 text-white">Your Quizzes</h4>
+            <div id="your-quiz-list" class="row" aria-live="polite">
+                <!-- User's quizzes will be dynamically inserted here -->
+            </div>
+
+            <hr class="my-5 bg-white">
+
+            <h4 class="mt-4 text-white">Other Quizzes</h4>
+            <div id="other-quiz-list" class="row" aria-live="polite">
+                <!-- Other users' quizzes will be dynamically inserted here -->
+            </div>
+        </section>
+
+        <!-- Quiz Creation/Editing View -->
+        <section id="create-quiz-view" class="d-none">
+            <h2 id="create-edit-title" class="text-white">Create a New Quiz</h2>
+            <div class="card">
+                <div class="card-body">
+                    <input type="hidden" id="editing-quiz-id">
+                    <div class="mb-3">
+                        <label for="quiz-title" class="form-label">Quiz Title</label>
+                        <input type="text" class="form-control" id="quiz-title" placeholder="e.g., The Italian Renaissance">
+                    </div>
+                    <div class="mb-3">
+                        <label for="quiz-description" class="form-label">Description</label>
+                        <textarea class="form-control" id="quiz-description" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quiz-time-limit" class="form-label">Time Limit (in minutes, 0 for no limit)</label>
+                        <input type="number" class="form-control" id="quiz-time-limit" value="0" min="0">
+                    </div>
+
+                    <hr>
+
+                    <!-- AI Question Generator -->
+                    <div class="p-3 bg-light rounded mb-4">
+                        <h5>✨ AI Question Generator</h5>
+                        <div class="mb-3">
+                            <label for="ai-topic" class="form-label">Topic</label>
+                            <input type="text" class="form-control" id="ai-topic" placeholder="e.g., 'React.js Hooks' or 'Photosynthesis'">
+                        </div>
+                        <div class="mb-3">
+                            <label for="ai-num-questions" class="form-label">Number of Questions</label>
+                            <input type="number" class="form-control" id="ai-num-questions" value="5" min="1" max="10">
+                        </div>
+                        <button id="generate-questions-btn" class="btn btn-success">
+                            Generate Questions
+                        </button>
+                    </div>
+
+                    <!-- Manually Added Questions -->
+                    <div id="questions-container">
+                        <!-- Questions will be dynamically added here -->
+                    </div>
+
+                    <button id="add-question-btn" class="btn btn-secondary mt-3" data-bs-toggle="modal" data-bs-target="#add-question-modal">Add Question Manually</button>
+                    <button id="save-quiz-btn" class="btn btn-primary mt-3 float-end">Save Quiz</button>
+                    <button id="cancel-edit-btn" class="btn btn-light mt-3 me-2 float-end d-none">Cancel</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Taking View -->
+        <section id="take-quiz-view" class="d-none">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="d-flex justify-content-between align-items-center text-white">
+                        <h2 id="quiz-title-display"></h2>
+                        <div id="timer-container" class="fs-4 fw-bold"></div>
+                    </div>
+                    <p id="quiz-description-display" class="text-white-50"></p>
+                    <div id="quiz-content">
+                        <!-- Question and answers will be loaded here -->
+                    </div>
+                    <button id="submit-quiz-btn" class="btn btn-primary w-100 mt-3">Submit Answers</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results View -->
+        <section id="results-view" class="d-none">
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center">
+                    <div class="card">
+                        <div class="card-body p-5">
+                            <h2 id="results-title">Quiz Results</h2>
+                            <h3 id="score-display" class="my-4">Your Score: 0/0</h3>
+                            <div class="progress mb-4">
+                                <div id="score-progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <button id="back-to-dashboard-btn" class="btn btn-primary">Back to Dashboard</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Add Question Modal -->
+    <div class="modal fade" id="add-question-modal" tabindex="-1" aria-labelledby="addQuestionModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addQuestionModalLabel">Add a New Question</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="manual-question-text" class="form-label">Question Text</label>
+              <input type="text" class="form-control" id="manual-question-text" placeholder="e.g., What is the capital of France?">
+            </div>
+             <div class="mt-3 mb-3">
+              <button id="generate-answer-btn" class="btn btn-success">✨ Generate Answer & Options with AI</button>
+            </div>
+            <div class="mb-3">
+              <label for="manual-correct-answer" class="form-label">Correct Answer</label>
+              <input type="text" class="form-control" id="manual-correct-answer" placeholder="AI will fill this...">
+            </div>
+            <hr>
+            <h6>Options</h6>
+            <div class="row g-2">
+              <div class="col-md-6"><input type="text" class="form-control manual-option" placeholder="Option 1"></div>
+              <div class="col-md-6"><input type="text" class="form-control manual-option" placeholder="Option 2"></div>
+              <div class="col-md-6"><input type="text" class="form-control manual-option" placeholder="Option 3"></div>
+              <div class="col-md-6"><input type="text" class="form-control manual-option" placeholder="Option 4"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="save-manual-question-btn">Add This Question</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="delete-confirm-modal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Confirm Deletion</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to delete this quiz? This will also delete all associated questions and attempts. This action cannot be undone.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger" id="confirm-delete-btn">Delete Quiz</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Firebase -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>

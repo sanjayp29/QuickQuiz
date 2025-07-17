@@ -1,0 +1,206 @@
+/* --- Core & Background --- */
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    overflow-x: hidden;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --- App Loader --- */
+.app-loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+/* --- Card Styling --- */
+.card {
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1rem;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.45);
+}
+
+/* --- Advanced Button Styling & Animations (Shine) --- */
+.btn {
+    position: relative;
+    padding: 12px 24px;
+    border-radius: 50px;
+    border: 0;
+    font-weight: 600;
+    color: white;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 1;
+}
+
+/* Shine Animation */
+.btn::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -100%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        110deg,
+        rgba(255, 255, 255, 0) 40%,
+        rgba(255, 255, 255, 0.25) 50%,
+        rgba(255, 255, 255, 0) 60%
+    );
+    transform: translateX(-100%) rotate(20deg);
+    transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    z-index: -1;
+}
+
+.btn:hover::after {
+    transform: translateX(100%) rotate(20deg);
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+.btn-primary {
+    background-image: linear-gradient(45deg, #0d6efd 0%, #4ea5ff 100%);
+    box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
+}
+
+.btn-secondary {
+    background-image: linear-gradient(45deg, #6c757d 0%, #868e96 100%);
+    box-shadow: 0 4px 15px 0 rgba(108, 117, 125, 0.75);
+}
+
+.btn-danger {
+    background-image: linear-gradient(45deg, #dc3545 0%, #e4606d 100%);
+    box-shadow: 0 4px 15px 0 rgba(220, 53, 69, 0.75);
+}
+
+.btn-success {
+    background-image: linear-gradient(45deg, #28a745 0%, #52b76a 100%);
+    box-shadow: 0 4px 15px 0 rgba(40, 167, 69, 0.75);
+}
+
+.btn-info {
+    background-image: linear-gradient(45deg, #17a2b8 0%, #47c4d8 100%);
+    box-shadow: 0 4px 15px 0 rgba(23, 162, 184, 0.75);
+}
+
+.btn-outline-light {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+    box-shadow: none;
+}
+.btn-outline-light:hover {
+    background: white;
+    color: #333;
+}
+
+.btn-light {
+    background: white;
+    color: #333;
+    box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.1);
+}
+.btn-light:hover {
+    background: #e2e6ea;
+}
+
+/* --- Specific UI Elements --- */
+.navbar {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    backdrop-filter: blur(10px);
+}
+
+#user-display-name {
+    color: white;
+    font-weight: 600;
+    margin-right: 1rem;
+}
+
+#login-view .card {
+    animation: fadeInDown 0.6s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.quiz-card-main {
+    cursor: pointer;
+}
+
+.form-control, .form-select {
+    border-radius: 0.75rem;
+}
+
+.progress {
+    border-radius: 50px;
+    height: 25px !important;
+}
+
+.progress-bar {
+    background-image: linear-gradient(45deg, #28a745, #218838);
+}
+
+/* Section Fade-in Animation */
+section {
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    h2, h3, h4 {
+        text-align: center;
+    }
+    .card-body {
+        padding: 1.5rem;
+    }
+    .btn {
+        padding: 10px 20px;
+    }
+    #dashboard-view .d-flex.justify-content-between {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 1rem;
+    }
+    .card .d-flex.justify-content-end {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+}
